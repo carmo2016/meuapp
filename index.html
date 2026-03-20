@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Meu IPTV - TV Box</title>
-    <!-- HLS.js para reprodução de m3u8 com redirecionamento -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         * {
@@ -26,7 +25,6 @@
             margin: 20px 0;
             font-size: 28px;
             color: #ff6b35;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .container {
@@ -39,7 +37,7 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 10px;
             margin-bottom: 20px;
-            max-height: 50vh;
+            max-height: 45vh;
             overflow-y: auto;
             padding: 5px;
         }
@@ -48,28 +46,18 @@
             padding: 12px 8px;
             font-size: 14px;
             font-weight: bold;
-            background: linear-gradient(135deg, #2c3e50 0%, #1a2632 100%);
+            background: #2c3e50;
             color: white;
             border: 1px solid #ff6b35;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
+            transition: all 0.2s;
         }
         
-        button:hover {
-            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-            transform: scale(1.02);
-        }
-        
-        button:active {
-            transform: scale(0.98);
-        }
-        
-        button:focus {
-            outline: 3px solid #ff6b35;
+        button:hover, button:focus {
             background: #ff6b35;
-            transform: scale(1.05);
+            outline: none;
+            transform: scale(1.02);
         }
         
         .video-container {
@@ -77,28 +65,26 @@
             border-radius: 12px;
             overflow: hidden;
             margin-top: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            position: relative;
         }
         
         video {
             width: 100%;
-            max-height: 60vh;
+            max-height: 55vh;
             background: black;
-        }
-        
-        .info {
-            text-align: center;
-            padding: 10px;
-            color: #888;
-            font-size: 12px;
         }
         
         .status {
             text-align: center;
-            padding: 5px;
-            color: #ff6b35;
-            font-size: 12px;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .info {
+            text-align: center;
+            padding: 8px;
+            color: #888;
+            font-size: 11px;
         }
         
         @media (max-width: 768px) {
@@ -111,200 +97,114 @@
             }
         }
         
-        /* Scrollbar personalizada */
         .channel-grid::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
-        
         .channel-grid::-webkit-scrollbar-track {
             background: #2c3e50;
-            border-radius: 4px;
         }
-        
         .channel-grid::-webkit-scrollbar-thumb {
             background: #ff6b35;
-            border-radius: 4px;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📺 Meu IPTV - TV Box</h1>
-        
         <div class="channel-grid" id="channel-list"></div>
-        
         <div class="video-container">
-            <video id="player" controls autoplay playsinline>
-                Seu navegador não suporta vídeo.
-            </video>
+            <video id="player" controls autoplay playsinline></video>
         </div>
-        <div class="status" id="status">⚡ Selecione um canal para assistir</div>
-        <div class="info">
-            ⚡ Use o controle remoto para navegar | Clique no botão para assistir
-        </div>
+        <div class="status" id="status">⚡ Selecione um canal</div>
+        <div class="info">⚡ Navegue com o controle | Pressione OK para assistir</div>
     </div>
 
     <script>
-        // Lista completa com todos os 80 canais
+        // Lista de canais (mantive apenas alguns para teste - depois você adiciona todos)
         const canais = [
-            { nome: "085 CARTOON", url: "http://216.227.152.66:9000/play/live/9BDCA724E3CA4213.m3u8?id=O0QRVjvnl7hCg9PKXTqh-G16yCg6XUy4xQwWPUZdmXc&uid=040609080233FFE9&mk=1750093490&client=newaaa&token=PD69nbVFxgk-UqxWPqvppIBFB1jOjYpwuRpwjRb7DUsWy520W4Zz0ozdFrtby35ZhRPpk6DM3fYjL96gB8wkh3hdo9R8tgv5By8_kjnFf4VbdMGpXjfggp-wsCdIBWlMzIkpKkeDKRoiFLgyC4VOgDFRpXXwHIRHI6jZZ7I2xts_lHE4dQisjxDVOiLtXOvPro2Kp5ixiekIJe9KBDvkZQ&ver=d000:c056&last=_NnuJdKISUA1Fnluz6xp26-RdpjJoWzsX8tk9nLuPYE&sign=2Uu2BVP0I6vxrf_DoYaEiA&sub=false&px=false&def=0" },
-            { nome: "081 SOUTH PARK", url: "https://service-stitcher.clusters.pluto.tv/v1/stitch/embed/hls/channel/609ae66b359b270007869ff1/master.m3u8?advertisingId=&appName=web&appVersion=unknown&appStoreUrl=&architecture=&buildVersion=&clientTime=0&deviceDNT=0&deviceId=3d53f168-eca6-11ee-861d-aca72e323d0f&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown" },
-            { nome: "082 PICA PAU", url: "http://ap4x.online/live/ONNEPLAY/0511605511/3787423.m3u8" },
-            { nome: "083 DRAGON BALL", url: "http://ap4x.online/live/ONNEPLAY/0511605511/3787496.m3u8" },
-            { nome: "084 JOVENS TITANS", url: "http://ap4x.online/live/ONNEPLAY/0511605511/3787571.m3u8" },
+            { nome: "🔴 TESTE - South Park (Pluto TV)", url: "https://service-stitcher.clusters.pluto.tv/v1/stitch/embed/hls/channel/609ae66b359b270007869ff1/master.m3u8?advertisingId=&appName=web&appVersion=unknown&appStoreUrl=&architecture=&buildVersion=&clientTime=0&deviceDNT=0&deviceId=3d53f168-eca6-11ee-861d-aca72e323d0f&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown" },
+            { nome: "🔴 TESTE - Pica Pau", url: "http://ap4x.online/live/ONNEPLAY/0511605511/3787423.m3u8" },
             { nome: "001 UFC FIGHT PASS", url: "http://granpirosh.top/live/841866657/c581b7318b/250112.m3u8" },
             { nome: "002 UFC FIGHT PASS 2", url: "http://granpirosh.top/live/841866657/c581b7318b/555764.m3u8" },
-            { nome: "003 FORMULA1(F1)", url: "http://granpirosh.top/live/841866657/c581b7318b/18297.m3u8" },
-            { nome: "004 TV BRASIL", url: "http://granpirosh.top/live/841866657/c581b7318b/364678.m3u8" },
-            { nome: "005 TV CAMARA", url: "http://granpirosh.top/live/841866657/c581b7318b/368851.m3u8" },
-            { nome: "006 TV JUSTICA", url: "http://granpirosh.top/live/841866657/c581b7318b/177.m3u8" },
-            { nome: "007 TV CULTUTA", url: "http://granpirosh.top/live/841866657/c581b7318b/364662.m3u8" },
-            { nome: "008 TV SENADO", url: "http://granpirosh.top/live/841866657/c581b7318b/368850.m3u8" },
-            { nome: "009 CANCAO NOVA", url: "http://granpirosh.top/live/841866657/c581b7318b/240806.m3u8" },
-            { nome: "010 SBT NACIONAL", url: "http://granpirosh.top/live/841866657/c581b7318b/244161.m3u8" },
-            { nome: "011 GLOBO SP", url: "http://granpirosh.top/live/841866657/c581b7318b/289881.m3u8" },
-            { nome: "011 GLOBO SP IPTV 2038", url: "http://ap4x.online/live/ONNEPLAY/0511605511/3787179.m3u8" },
-            { nome: "012 RECORD SP", url: "http://granpirosh.top/live/841866657/c581b7318b/244071.m3u8" },
-            { nome: "013 REDE TV!", url: "http://granpirosh.top/live/841866657/c581b7318b/80170.m3u8" },
-            { nome: "014 BAND TV", url: "http://granpirosh.top/live/841866657/c581b7318b/255465.m3u8" },
-            { nome: "015 FUTURA", url: "http://granpirosh.top/live/841866657/c581b7318b/159.m3u8" },
-            { nome: "016 SPORTV", url: "http://granpirosh.top/live/841866657/c581b7318b/118881.m3u8" },
-            { nome: "017 SPORTV2", url: "http://granpirosh.top/live/841866657/c581b7318b/554.m3u8" },
-            { nome: "018 SporTV3", url: "http://granpirosh.top/live/841866657/c581b7318b/559.m3u8" },
-            { nome: "019 ESPN", url: "http://granpirosh.top/live/841866657/c581b7318b/309458.m3u8" },
-            { nome: "020 ESPN 2", url: "http://granpirosh.top/live/841866657/c581b7318b/215.m3u8" },
-            { nome: "021 ESPN 3", url: "http://granpirosh.top/live/841866657/c581b7318b/220.m3u8" },
-            { nome: "022 ESPN 4", url: "http://granpirosh.top/live/841866657/c581b7318b/225.m3u8" },
-            { nome: "023 ESPN 5", url: "http://granpirosh.top/live/841866657/c581b7318b/228.m3u8" },
-            { nome: "024 BAND SPORTS", url: "http://granpirosh.top/live/841866657/c581b7318b/235.m3u8" },
-            { nome: "025 COMBATE", url: "http://granpirosh.top/live/841866657/c581b7318b/240.m3u8" },
-            { nome: "026 PREMIERE CLUBERS 1", url: "http://granpirosh.top/live/841866657/c581b7318b/494.m3u8" },
-            { nome: "027 PREMIERE 2", url: "http://granpirosh.top/live/841866657/c581b7318b/499.m3u8" },
-            { nome: "028 PREMIERE 3", url: "http://granpirosh.top/live/841866657/c581b7318b/504.m3u8" },
-            { nome: "029 PREMIERE 4", url: "http://granpirosh.top/live/841866657/c581b7318b/509.m3u8" },
-            { nome: "030 PREMIERE 5", url: "http://granpirosh.top/live/841866657/c581b7318b/514.m3u8" },
-            { nome: "031 PREMIERE 6", url: "http://granpirosh.top/live/841866657/c581b7318b/519.m3u8" },
-            { nome: "032 PREMIERE 7", url: "http://granpirosh.top/live/841866657/c581b7318b/519.m3u8" },
-            { nome: "033 PREMIERE 8", url: "http://granpirosh.top/live/841866657/c581b7318b/380749.m3u8" },
-            { nome: "034 HGTV", url: "http://granpirosh.top/live/841866657/c581b7318b/2627.m3u8" },
-            { nome: "035 DISCOVERY CHANNEL", url: "http://granpirosh.top/live/841866657/c581b7318b/2577.m3u8" },
-            { nome: "036 DISCOVERY SCIENCE", url: "http://granpirosh.top/live/841866657/c581b7318b/2582.m3u8" },
-            { nome: "037 DISCOVERY THEATER", url: "http://granpirosh.top/live/841866657/c581b7318b/2587.m3u8" },
-            { nome: "038 DISCOVERY TURBO", url: "http://granpirosh.top/live/841866657/c581b7318b/2592.m3u8" },
-            { nome: "039 DISCOVERY H&H", url: "http://granpirosh.top/live/841866657/c581b7318b/2572.m3u8" },
-            { nome: "040 HISTORY", url: "http://granpirosh.top/live/841866657/c581b7318b/2617.m3u8" },
-            { nome: "041 ANIMAL PLANET", url: "http://granpirosh.top/live/841866657/c581b7318b/2602.m3u8" },
-            { nome: "042 HISTORY 2", url: "http://granpirosh.top/live/841866657/c581b7318b/2622.m3u8" },
-            { nome: "043 DISCOVERY WORLD", url: "http://granpirosh.top/live/841866657/c581b7318b/2597.m3u8" },
-            { nome: "044 ADULT SWIM", url: "http://granpirosh.top/live/841866657/c581b7318b/376344.m3u8" },
-            { nome: "045 DISCOVERY KIDS", url: "http://granpirosh.top/live/841866657/c581b7318b/364.m3u8" },
-            { nome: "046 CARTONITO", url: "http://granpirosh.top/live/841866657/c581b7318b/110683.m3u8" },
-            { nome: "047 GLOOB", url: "http://granpirosh.top/live/841866657/c581b7318b/377227.m3u8" },
-            { nome: "048 GLOBINHO", url: "http://granpirosh.top/live/841866657/c581b7318b/377232.m3u8" },
-            { nome: "049 DRAGON BALL Z", url: "http://granpirosh.top/live/841866657/c581b7318b/271601.m3u8" },
-            { nome: "050 DRAGON BALL SUPER", url: "http://granpirosh.top/live/841866657/c581b7318b/271604.m3u8" },
-            { nome: "051 CARTOON", url: "http://granpirosh.top/live/841866657/c581b7318b/352.m3u8" },
-            { nome: "052 NICKELODEON", url: "http://granpirosh.top/live/841866657/c581b7318b/372.m3u8" },
-            { nome: "053 NICK JR", url: "http://granpirosh.top/live/841866657/c581b7318b/368.m3u8" },
-            { nome: "054 UNIVERSAL TV", url: "http://granpirosh.top/live/841866657/c581b7318b/743.m3u8" },
-            { nome: "055 DISNEY", url: "http://granpirosh.top/live/841866657/c581b7318b/743.m3u8" },
-            { nome: "056 DISNEY 2", url: "http://granpirosh.top/live/841866657/c581b7318b/232230.m3u8" },
-            { nome: "057 DISNEY 3", url: "http://granpirosh.top/live/841866657/c581b7318b/232234.m3u8" },
-            { nome: "058 DISNEY 4", url: "http://granpirosh.top/live/841866657/c581b7318b/232242.m3u8" },
-            { nome: "059 WARNER", url: "http://granpirosh.top/live/841866657/c581b7318b/749.m3u8" },
-            { nome: "060 SONY CHANNEL", url: "http://granpirosh.top/live/841866657/c581b7318b/21229.m3u8" },
-            { nome: "061 TNT NOVELAS", url: "http://granpirosh.top/live/841866657/c581b7318b/264555.m3u8" },
-            { nome: "062 TNT SERIES", url: "http://granpirosh.top/live/841866657/c581b7318b/738.m3u8" },
-            { nome: "063 AXN", url: "http://granpirosh.top/live/841866657/c581b7318b/676.m3u8" },
-            { nome: "064 LIFE TIME", url: "http://granpirosh.top/live/841866657/c581b7318b/2488.m3u8" },
-            { nome: "065 E!", url: "http://granpirosh.top/live/841866657/c581b7318b/2472.m3u8" },
-            { nome: "066 A&E", url: "http://granpirosh.top/live/841866657/c581b7318b/666.m3u8" },
-            { nome: "067 COMEDY CENTRAL", url: "http://granpirosh.top/live/841866657/c581b7318b/687.m3u8" },
-            { nome: "068 STUDIO UNIVERSAL", url: "http://granpirosh.top/live/841866657/c581b7318b/713.m3u8" },
-            { nome: "069 CANAL BRASIL", url: "http://granpirosh.top/live/841866657/c581b7318b/146.m3u8" },
-            { nome: "070 SPACE", url: "http://granpirosh.top/live/841866657/c581b7318b/707.m3u8" },
-            { nome: "071 CINEMAX", url: "http://granpirosh.top/live/841866657/c581b7318b/682.m3u8" },
-            { nome: "072 MEGAPIX", url: "http://granpirosh.top/live/841866657/c581b7318b/692.m3u8" },
-            { nome: "073 TNT", url: "http://granpirosh.top/live/841866657/c581b7318b/733.m3u8" },
-            { nome: "074 PARAMOUNT NETWORK", url: "http://granpirosh.top/live/841866657/c581b7318b/697.m3u8" },
-            { nome: "075 TELECINE PREMIUM", url: "http://granpirosh.top/live/841866657/c581b7318b/635.m3u8" },
-            { nome: "076 TELECINE ACTION", url: "http://granpirosh.top/live/841866657/c581b7318b/615.m3u8" },
-            { nome: "077 TELECINE TOUCH", url: "http://granpirosh.top/live/841866657/c581b7318b/589.m3u8" },
-            { nome: "078 TELECINE FUN", url: "http://granpirosh.top/live/841866657/c581b7318b/625.m3u8" },
-            { nome: "079 TELECINE CULT", url: "http://granpirosh.top/live/841866657/c581b7318b/620.m3u8" },
-            { nome: "080 TELECINE PIPOCA", url: "http://granpirosh.top/live/841866657/c581b7318b/630.m3u8" }
+            { nome: "003 FORMULA1(F1)", url: "http://granpirosh.top/live/841866657/c581b7318b/18297.m3u8" }
         ];
 
-        let hls = null;
         const video = document.getElementById('player');
         const statusDiv = document.getElementById('status');
+        let hls = null;
 
         function playChannel(url) {
-            statusDiv.textContent = '🔄 Carregando canal...';
-            statusDiv.style.color = '#ff6b35';
-            
-            // Parar qualquer reprodução atual
-            video.pause();
+            // Limpar player anterior
             if (hls) {
                 hls.destroy();
                 hls = null;
             }
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
             
-            // Verificar se o navegador suporta HLS.js
-            if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Safari ou navegador com suporte nativo
-                video.src = url;
-                video.addEventListener('loadedmetadata', () => {
-                    video.play().catch(e => {
-                        statusDiv.textContent = '❌ Erro ao reproduzir: ' + e.message;
-                        statusDiv.style.color = '#ff4444';
-                    });
-                });
-                video.addEventListener('canplay', () => {
-                    statusDiv.textContent = '📺 Assistindo agora';
-                    statusDiv.style.color = '#4caf50';
-                });
-            } else if (Hls.isSupported()) {
-                // Usar HLS.js para maior compatibilidade com redirecionamentos
+            statusDiv.innerHTML = '🔄 Carregando...';
+            statusDiv.style.color = '#ffaa44';
+            
+            console.log('Tentando carregar:', url);
+            
+            // Método 1: Tentar com HLS.js (mais robusto para redirects)
+            if (Hls.isSupported()) {
                 hls = new Hls({
                     debug: false,
-                    enableWorker: true,
-                    maxLoadingDelay: 4,
-                    maxBufferSize: 60 * 1000 * 1000,
-                    maxBufferLength: 30
+                    xhrSetup: function(xhr, url) {
+                        // Forçar comportamento similar ao navegador
+                        xhr.withCredentials = false;
+                    }
                 });
+                
                 hls.loadSource(url);
                 hls.attachMedia(video);
                 
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(e => {
-                        statusDiv.textContent = '❌ Erro ao reproduzir: ' + e.message;
-                        statusDiv.style.color = '#ff4444';
-                    });
-                    statusDiv.textContent = '📺 Assistindo agora';
-                    statusDiv.style.color = '#4caf50';
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    statusDiv.innerHTML = '✅ Reproduzindo';
+                    statusDiv.style.color = '#4cae4c';
+                    video.play().catch(e => console.log('play error:', e));
                 });
                 
-                hls.on(Hls.Events.ERROR, (event, data) => {
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error('HLS Error:', data);
                     if (data.fatal) {
-                        statusDiv.textContent = '❌ Erro no canal. Tente novamente.';
-                        statusDiv.style.color = '#ff4444';
+                        statusDiv.innerHTML = '❌ Erro: Canal offline ou link inválido';
+                        statusDiv.style.color = '#ff5555';
                     }
                 });
-            } else {
-                statusDiv.textContent = '❌ Seu navegador não suporta reprodução HLS';
-                statusDiv.style.color = '#ff4444';
+            } 
+            // Método 2: Fallback para player nativo
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.addEventListener('canplay', function() {
+                    statusDiv.innerHTML = '✅ Reproduzindo';
+                    statusDiv.style.color = '#4cae4c';
+                });
+                video.play().catch(e => {
+                    statusDiv.innerHTML = '❌ Erro: ' + e.message;
+                    statusDiv.style.color = '#ff5555';
+                });
+            } 
+            else {
+                statusDiv.innerHTML = '❌ Navegador não suporta este formato';
+                statusDiv.style.color = '#ff5555';
             }
             
-            // Mensagem de erro se o vídeo falhar
-            video.onerror = () => {
-                statusDiv.textContent = '❌ Falha ao carregar o canal. O link pode estar offline.';
-                statusDiv.style.color = '#ff4444';
-            };
+            // Timeout de segurança
+            setTimeout(() => {
+                if (statusDiv.innerHTML === '🔄 Carregando...') {
+                    statusDiv.innerHTML = '⚠️ Demorou muito. Tente outro canal.';
+                    statusDiv.style.color = '#ffaa44';
+                }
+            }, 15000);
         }
 
         function carregarCanais() {
             const container = document.getElementById('channel-list');
+            container.innerHTML = '';
             canais.forEach(canal => {
                 const btn = document.createElement('button');
                 btn.textContent = canal.nome;
