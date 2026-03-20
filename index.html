@@ -61,7 +61,6 @@
             transform: scale(0.98);
         }
         
-        /* Estilo para foco em TV Box (navegação por controle remoto) */
         button:focus {
             outline: 3px solid #ff6b35;
             background: #ff6b35;
@@ -104,9 +103,7 @@
     <div class="container">
         <h1>📺 Meu IPTV - TV Box</h1>
         
-        <div class="channel-grid" id="channel-list">
-            <!-- Os canais serão inseridos aqui via JavaScript -->
-        </div>
+        <div class="channel-grid" id="channel-list"></div>
         
         <div class="video-container">
             <video id="player" controls autoplay>
@@ -120,7 +117,7 @@
     </div>
 
     <script>
-        // Lista de canais
+        // Lista completa com todos os 80 canais
         const canais = [
             { nome: "085 CARTOON", url: "http://216.227.152.66:9000/play/live/9BDCA724E3CA4213.m3u8?id=O0QRVjvnl7hCg9PKXTqh-G16yCg6XUy4xQwWPUZdmXc&uid=040609080233FFE9&mk=1750093490&client=newaaa&token=PD69nbVFxgk-UqxWPqvppIBFB1jOjYpwuRpwjRb7DUsWy520W4Zz0ozdFrtby35ZhRPpk6DM3fYjL96gB8wkh3hdo9R8tgv5By8_kjnFf4VbdMGpXjfggp-wsCdIBWlMzIkpKkeDKRoiFLgyC4VOgDFRpXXwHIRHI6jZZ7I2xts_lHE4dQisjxDVOiLtXOvPro2Kp5ixiekIJe9KBDvkZQ&ver=d000:c056&last=_NnuJdKISUA1Fnluz6xp26-RdpjJoWzsX8tk9nLuPYE&sign=2Uu2BVP0I6vxrf_DoYaEiA&sub=false&px=false&def=0" },
             { nome: "081 SOUTH PARK", url: "https://service-stitcher.clusters.pluto.tv/v1/stitch/embed/hls/channel/609ae66b359b270007869ff1/master.m3u8?advertisingId=&appName=web&appVersion=unknown&appStoreUrl=&architecture=&buildVersion=&clientTime=0&deviceDNT=0&deviceId=3d53f168-eca6-11ee-861d-aca72e323d0f&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown" },
@@ -152,28 +149,66 @@
             { nome: "022 ESPN 4", url: "http://granpirosh.top/live/841866657/c581b7318b/225.m3u8" },
             { nome: "023 ESPN 5", url: "http://granpirosh.top/live/841866657/c581b7318b/228.m3u8" },
             { nome: "024 BAND SPORTS", url: "http://granpirosh.top/live/841866657/c581b7318b/235.m3u8" },
-            { nome: "025 COMBATE", url: "http://granpirosh.top/live/841866657/c581b7318b/240.m3u8" }
+            { nome: "025 COMBATE", url: "http://granpirosh.top/live/841866657/c581b7318b/240.m3u8" },
+            { nome: "026 PREMIERE CLUBERS 1", url: "http://granpirosh.top/live/841866657/c581b7318b/494.m3u8" },
+            { nome: "027 PREMIERE 2", url: "http://granpirosh.top/live/841866657/c581b7318b/499.m3u8" },
+            { nome: "028 PREMIERE 3", url: "http://granpirosh.top/live/841866657/c581b7318b/504.m3u8" },
+            { nome: "029 PREMIERE 4", url: "http://granpirosh.top/live/841866657/c581b7318b/509.m3u8" },
+            { nome: "030 PREMIERE 5", url: "http://granpirosh.top/live/841866657/c581b7318b/514.m3u8" },
+            { nome: "031 PREMIERE 6", url: "http://granpirosh.top/live/841866657/c581b7318b/519.m3u8" },
+            { nome: "032 PREMIERE 7", url: "http://granpirosh.top/live/841866657/c581b7318b/519.m3u8" },
+            { nome: "033 PREMIERE 8", url: "http://granpirosh.top/live/841866657/c581b7318b/380749.m3u8" },
+            { nome: "034 HGTV", url: "http://granpirosh.top/live/841866657/c581b7318b/2627.m3u8" },
+            { nome: "035 DISCOVERY CHANNEL", url: "http://granpirosh.top/live/841866657/c581b7318b/2577.m3u8" },
+            { nome: "036 DISCOVERY SCIENCE", url: "http://granpirosh.top/live/841866657/c581b7318b/2582.m3u8" },
+            { nome: "037 DISCOVERY THEATER", url: "http://granpirosh.top/live/841866657/c581b7318b/2587.m3u8" },
+            { nome: "038 DISCOVERY TURBO", url: "http://granpirosh.top/live/841866657/c581b7318b/2592.m3u8" },
+            { nome: "039 DISCOVERY H&H", url: "http://granpirosh.top/live/841866657/c581b7318b/2572.m3u8" },
+            { nome: "040 HISTORY", url: "http://granpirosh.top/live/841866657/c581b7318b/2617.m3u8" },
+            { nome: "041 ANIMAL PLANET", url: "http://granpirosh.top/live/841866657/c581b7318b/2602.m3u8" },
+            { nome: "042 HISTORY 2", url: "http://granpirosh.top/live/841866657/c581b7318b/2622.m3u8" },
+            { nome: "043 DISCOVERY WORLD", url: "http://granpirosh.top/live/841866657/c581b7318b/2597.m3u8" },
+            { nome: "044 ADULT SWIM", url: "http://granpirosh.top/live/841866657/c581b7318b/376344.m3u8" },
+            { nome: "045 DISCOVERY KIDS", url: "http://granpirosh.top/live/841866657/c581b7318b/364.m3u8" },
+            { nome: "046 CARTONITO", url: "http://granpirosh.top/live/841866657/c581b7318b/110683.m3u8" },
+            { nome: "047 GLOOB", url: "http://granpirosh.top/live/841866657/c581b7318b/377227.m3u8" },
+            { nome: "048 GLOBINHO", url: "http://granpirosh.top/live/841866657/c581b7318b/377232.m3u8" },
+            { nome: "049 DRAGON BALL Z", url: "http://granpirosh.top/live/841866657/c581b7318b/271601.m3u8" },
+            { nome: "050 DRAGON BALL SUPER", url: "http://granpirosh.top/live/841866657/c581b7318b/271604.m3u8" },
+            { nome: "051 CARTOON", url: "http://granpirosh.top/live/841866657/c581b7318b/352.m3u8" },
+            { nome: "052 NICKELODEON", url: "http://granpirosh.top/live/841866657/c581b7318b/372.m3u8" },
+            { nome: "053 NICK JR", url: "http://granpirosh.top/live/841866657/c581b7318b/368.m3u8" },
+            { nome: "054 UNIVERSAL TV", url: "http://granpirosh.top/live/841866657/c581b7318b/743.m3u8" },
+            { nome: "055 DISNEY", url: "http://granpirosh.top/live/841866657/c581b7318b/743.m3u8" },
+            { nome: "056 DISNEY 2", url: "http://granpirosh.top/live/841866657/c581b7318b/232230.m3u8" },
+            { nome: "057 DISNEY 3", url: "http://granpirosh.top/live/841866657/c581b7318b/232234.m3u8" },
+            { nome: "058 DISNEY 4", url: "http://granpirosh.top/live/841866657/c581b7318b/232242.m3u8" },
+            { nome: "059 WARNER", url: "http://granpirosh.top/live/841866657/c581b7318b/749.m3u8" },
+            { nome: "060 SONY CHANNEL", url: "http://granpirosh.top/live/841866657/c581b7318b/21229.m3u8" },
+            { nome: "061 TNT NOVELAS", url: "http://granpirosh.top/live/841866657/c581b7318b/264555.m3u8" },
+            { nome: "062 TNT SERIES", url: "http://granpirosh.top/live/841866657/c581b7318b/738.m3u8" },
+            { nome: "063 AXN", url: "http://granpirosh.top/live/841866657/c581b7318b/676.m3u8" },
+            { nome: "064 LIFE TIME", url: "http://granpirosh.top/live/841866657/c581b7318b/2488.m3u8" },
+            { nome: "065 E!", url: "http://granpirosh.top/live/841866657/c581b7318b/2472.m3u8" },
+            { nome: "066 A&E", url: "http://granpirosh.top/live/841866657/c581b7318b/666.m3u8" },
+            { nome: "067 COMEDY CENTRAL", url: "http://granpirosh.top/live/841866657/c581b7318b/687.m3u8" },
+            { nome: "068 STUDIO UNIVERSAL", url: "http://granpirosh.top/live/841866657/c581b7318b/713.m3u8" },
+            { nome: "069 CANAL BRASIL", url: "http://granpirosh.top/live/841866657/c581b7318b/146.m3u8" },
+            { nome: "070 SPACE", url: "http://granpirosh.top/live/841866657/c581b7318b/707.m3u8" },
+            { nome: "071 CINEMAX", url: "http://granpirosh.top/live/841866657/c581b7318b/682.m3u8" },
+            { nome: "072 MEGAPIX", url: "http://granpirosh.top/live/841866657/c581b7318b/692.m3u8" },
+            { nome: "073 TNT", url: "http://granpirosh.top/live/841866657/c581b7318b/733.m3u8" },
+            { nome: "074 PARAMOUNT NETWORK", url: "http://granpirosh.top/live/841866657/c581b7318b/697.m3u8" },
+            { nome: "075 TELECINE PREMIUM", url: "http://granpirosh.top/live/841866657/c581b7318b/635.m3u8" },
+            { nome: "076 TELECINE ACTION", url: "http://granpirosh.top/live/841866657/c581b7318b/615.m3u8" },
+            { nome: "077 TELECINE TOUCH", url: "http://granpirosh.top/live/841866657/c581b7318b/589.m3u8" },
+            { nome: "078 TELECINE FUN", url: "http://granpirosh.top/live/841866657/c581b7318b/625.m3u8" },
+            { nome: "079 TELECINE CULT", url: "http://granpirosh.top/live/841866657/c581b7318b/620.m3u8" },
+            { nome: "080 TELECINE PIPOCA", url: "http://granpirosh.top/live/841866657/c581b7318b/630.m3u8" }
         ];
 
-        // Adicionar mais canais para completar a lista (os URLs continuam os mesmos do seu arquivo)
-        const maisCanais = [
-            "026 PREMIERE CLUBERS 1", "027 PREMIERE 2", "028 PREMIERE 3", "029 PREMIERE 4", "030 PREMIERE 5",
-            "031 PREMIERE 6", "032 PREMIERE 7", "033 PREMIERE 8", "034 HGTV", "035 DISCOVERY CHANNEL",
-            "036 DISCOVERY SCIENCE", "037 DISCOVERY THEATER", "038 DISCOVERY TURBO", "039 DISCOVERY H&H",
-            "040 HISTORY", "041 ANIMAL PLANET", "042 HISTORY 2", "043 DISCOVERY WORLD", "044 ADULT SWIM",
-            "045 DISCOVERY KIDS", "046 CARTONITO", "047 GLOOB", "048 GLOBINHO", "049 DRAGON BALL Z",
-            "050 DRAGON BALL SUPER", "051 CARTOON", "052 NICKELODEON", "053 NICK JR", "054 UNIVERSAL TV",
-            "055 DISNEY", "056 DISNEY 2", "057 DISNEY 3", "058 DISNEY 4", "059 WARNER", "060 SONY CHANNEL",
-            "061 TNT NOVELAS", "062 TNT SERIES", "063 AXN", "064 LIFE TIME", "065 E!", "066 A&E",
-            "067 COMEDY CENTRAL", "068 STUDIO UNIVERSAL", "069 CANAL BRASIL", "070 SPACE", "071 CINEMAX",
-            "072 MEGAPIX", "073 TNT", "074 PARAMOUNT NETWORK", "075 TELECINE PREMIUM", "076 TELECINE ACTION",
-            "077 TELECINE TOUCH", "078 TELECINE FUN", "079 TELECINE CULT", "080 TELECINE PIPOCA"
-        ];
-
-        // Função para carregar os botões
         function carregarCanais() {
             const container = document.getElementById('channel-list');
-            
             canais.forEach(canal => {
                 const btn = document.createElement('button');
                 btn.textContent = canal.nome;
@@ -188,7 +223,6 @@
             player.play().catch(e => console.log('Erro ao reproduzir:', e));
         }
 
-        // Carregar ao iniciar
         carregarCanais();
     </script>
 </body>
